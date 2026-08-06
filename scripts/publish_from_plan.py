@@ -107,6 +107,18 @@ def main():
     plan_path = f"plans/{today}.json"
     done_path = f"done/{today}"
 
+    if os.environ.get("DRY_RUN", "false").lower() == "true":
+        me = api("me", {"fields": "user_id,username"})
+        print(f"DRY RUN — 토큰 유효 (@{me.get('username')})")
+        if os.path.exists(plan_path):
+            plan = json.load(open(plan_path))
+            print(f"오늘 계획 {len(plan['items'])}건:")
+            for it in plan["items"]:
+                print(f"  - {it['type']}: {it['caption'][:30]!r} 미디어 {len(it['media'])}개")
+        else:
+            print(f"오늘 계획 없음: {plan_path} (테스트 시점엔 정상)")
+        return
+
     if not os.path.exists(plan_path):
         print(f"계획 없음: {plan_path} — 종료 (맥에서 큐가 안 돌았거나 게시 없는 날)")
         return
@@ -114,13 +126,6 @@ def main():
         print(f"이미 게시됨: {done_path} — 종료")
         return
     plan = json.load(open(plan_path))
-
-    if os.environ.get("DRY_RUN", "false").lower() == "true":
-        me = api("me", {"fields": "user_id,username"})
-        print(f"DRY RUN — 토큰 유효 (@{me.get('username')}), 계획 {len(plan['items'])}건:")
-        for it in plan["items"]:
-            print(f"  - {it['type']}: {it['caption'][:30]!r} 미디어 {len(it['media'])}개")
-        return
 
     lines = []
     for n, item in enumerate(plan["items"]):
