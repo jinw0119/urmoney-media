@@ -72,11 +72,28 @@ def publish_item(uid, item):
     return media_id
 
 
+def already_posted(uid, caption):
+    """최근 10개에서 같은 캡션 첫 줄 탐색 — 2026-08-06 실증: 활동 제한 403 응답이
+    와도 서버에선 게시가 완료되는 경우가 있어, 확인 없는 재시도는 중복 게시가 된다."""
+    first = (caption or "").strip().split("\n")[0][:60]
+    if not first:
+        return None
+    res = api(f"{uid}/media", {"fields": "caption,permalink", "limit": 10})
+    for m in res.get("data", []):
+        if (m.get("caption") or "").strip().split("\n")[0][:60] == first:
+            return m
+    return None
+
+
 def publish_with_backoff(uid, item):
     for i, delay in enumerate([0] + BACKOFF):
         if delay:
             print(f"활동 제한 — {delay//60}분 대기 후 재시도")
             time.sleep(delay)
+        dup = already_posted(uid, item["caption"])
+        if dup:  # 직전 '실패' 시도가 실제로는 게시됐던 경우 포함
+            print(f"이미 게시됨 (중복 방지): {dup.get('permalink')}")
+            return dup.get("id")
         try:
             return publish_item(uid, item)
         except RuntimeError as e:
