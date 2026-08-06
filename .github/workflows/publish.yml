@@ -1,0 +1,41 @@
+name: urmoney-publish
+
+on:
+  schedule:
+    - cron: '0 3 * * 1,3,5'   # 월·수·금 12:00 KST (점심 피크)
+    - cron: '0 10 * * 2,4'    # 화·목 19:00 KST (퇴근 후 릴스 피크)
+    - cron: '0 2 * * 6'       # 토 11:00 KST
+    - cron: '0 11 * * 0'      # 일 20:00 KST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'true면 게시 없이 토큰·계획 검증만'
+        default: 'true'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urmoney-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish from plan
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: python3 scripts/publish_from_plan.py
+      - name: Commit done marker
+        if: always()
+        run: |
+          git config user.name urmoney-bot
+          git config user.email urmoney-bot@users.noreply.github.com
+          git add -A done/ 2>/dev/null || true
+          git diff --cached --quiet || { git commit -m "publish done marker" && git push; }
