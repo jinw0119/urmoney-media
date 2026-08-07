@@ -2,10 +2,12 @@ name: urmoney-publish
 
 on:
   schedule:
-    - cron: '0 3 * * 1,3,5'   # 월·수·금 12:00 KST (점심 피크)
-    - cron: '0 10 * * 2,4'    # 화·목 19:00 KST (퇴근 후 릴스 피크)
-    - cron: '0 2 * * 6'       # 토 11:00 KST
-    - cron: '0 11 * * 0'      # 일 20:00 KST
+    # GitHub cron은 정각·혼잡 시간대에 수십 분~1시간+ 지연됨 (8/7 실측 1h44m)
+    # → 목표 시각보다 20분 일찍 + 정각을 피한 분(:40)으로 설정
+    - cron: '40 2 * * 1,3,5'  # 월·수·금 ~12:00 KST (점심 피크)
+    - cron: '40 9 * * 2,4'    # 화·목 ~19:00 KST (퇴근 후 릴스 피크)
+    - cron: '40 1 * * 6'      # 토 ~11:00 KST
+    - cron: '40 10 * * 0'     # 일 ~20:00 KST
   workflow_dispatch:
     inputs:
       dry_run:
