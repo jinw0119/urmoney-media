@@ -19,5 +19,6 @@ jobs:
       - name: Check plan exists
         env:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           TEST_DATE: ${{ github.event.inputs.test_date || '' }}
         run: python3 scripts/watchdog.py
