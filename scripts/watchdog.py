@@ -29,7 +29,9 @@ def send_discord(text):
     try:
         req = urllib.request.Request(
             hook, data=json.dumps({"content": text}).encode(),
-            headers={"Content-Type": "application/json"})
+            # Discord는 기본 python-urllib UA를 차단(403) — UA 명시 필수
+            headers={"Content-Type": "application/json",
+                     "User-Agent": "urmoney-watchdog/1.0 (+https://github.com/jinw0119/urmoney-media)"})
         urllib.request.urlopen(req, timeout=20)
         print("디스코드 발송 완료")
     except Exception as e:
