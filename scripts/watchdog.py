@@ -38,9 +38,41 @@ def send_discord(text):
         print(f"디스코드 실패(메일은 별도 발송): {e}")
 
 
+def send_mail(subject, body):
+    pw = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
+    if not pw:
+        raise SystemExit("GMAIL_APP_PASSWORD 없음 — 메일 불가")
+    msg = MIMEText(body, _charset="utf-8")
+    msg["Subject"] = subject
+    msg["From"] = msg["To"] = MAIL
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as s:
+        s.login(MAIL, pw)
+        s.send_message(msg)
+    print("알림 메일 발송 완료")
+
+
+def check_published(now):
+    """밤 실행에서 오늘 게시가 실제로 됐는지 확인 — 계획은 있는데 done 마커가 없으면 누락.
+
+    2026-08-08: 토요일 크론이 아예 안 떠서 게시가 조용히 빠졌는데 아무 알림도 없었다.
+    감시자가 '생성'만 보고 '게시'는 안 봤던 탓 — 이 확인을 추가한다.
+    """
+    today = now.date().isoformat()
+    if not os.path.exists(f"plans/{today}.json") or os.path.exists(f"done/{today}"):
+        return
+    print(f"경고: plans/{today}.json은 있는데 done/{today}이 없음 — 게시 누락 알림")
+    body = (f"오늘({today}) 게시 계획은 있는데 게시 완료 기록이 없습니다.\n\n"
+            f"게시 워크플로가 실패했거나, 토큰 만료·활동 제한일 수 있습니다.\n"
+            f"확인: https://github.com/jinw0119/urmoney-media/actions")
+    send_discord(f"⚠️ **오늘({today}) 게시 누락 의심**\n{body}")
+    send_mail("[얼마니 ⚠️] 오늘 게시가 안 된 것 같습니다", body)
+
+
 def main():
     now = datetime.now(KST)
     test_date = os.environ.get("TEST_DATE", "").strip()
+    if not test_date and now.hour >= 21:  # 모든 게시 시각(최대 20시)이 지난 뒤
+        check_published(now)
     if test_date:
         target, label = test_date, "테스트"
     elif now.hour >= 20:
@@ -59,16 +91,7 @@ def main():
             f"게시 계획이 push되면 클라우드가 알아서 게시합니다.\n"
             f"(정오 게시 시간이 이미 지났다면, 다음 세션에서 수동 게시를 요청해 주세요)")
     send_discord(f"⚠️ **{label}({target}) 콘텐츠 미생성 — 맥북을 열어주세요**\n{body}")
-    pw = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
-    if not pw:
-        raise SystemExit("GMAIL_APP_PASSWORD 없음 — 메일 불가")
-    msg = MIMEText(body, _charset="utf-8")
-    msg["Subject"] = f"[얼마니 ⚠️] {label} 콘텐츠 미생성 — 맥북을 열어주세요"
-    msg["From"] = msg["To"] = MAIL
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as s:
-        s.login(MAIL, pw)
-        s.send_message(msg)
-    print("알림 메일 발송 완료")
+    send_mail(f"[얼마니 ⚠️] {label} 콘텐츠 미생성 — 맥북을 열어주세요", body)
 
 
 if __name__ == "__main__":

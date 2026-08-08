@@ -24,6 +24,11 @@ MAIL = "jinw0119@gmail.com"
 SPACING = 300          # 게시물 간 간격 (연속 게시 시 활동 제한 — 2026-08-05/06 실증)
 BACKOFF = [900, 1800]  # 2207051 활동 제한 백오프
 
+# 요일별 게시 시각(KST). weekday(): 월=0 … 일=6
+# 2026-08-08 변경: cron 1일 1회로는 GitHub 스케줄 지연·누락에 무방비였다(그날 토요일 게시 실패).
+# 이제 30분마다 실행하고, 이 표의 시각이 지났고 아직 done 마커가 없을 때만 게시한다.
+POST_HOUR = {0: 12, 1: 19, 2: 12, 3: 19, 4: 12, 5: 11, 6: 20}
+
 
 def api(path, params=None, post=False):
     params = dict(params or {})
@@ -118,9 +123,15 @@ def notify(subject, body):
         print(f"메일 실패(무시): {e}")
 
 
+def window_open(now):
+    """오늘의 게시 시각이 지났는가. 30분마다 도는 실행 중 '지금 올릴 차례'만 통과시킨다."""
+    return now.hour >= POST_HOUR[now.weekday()]
+
+
 def main():
     uid = os.environ["IG_USER_ID"]
-    today = datetime.now(KST).date().isoformat()
+    now = datetime.now(KST)
+    today = now.date().isoformat()
     plan_path = f"plans/{today}.json"
     done_path = f"done/{today}"
 
@@ -142,6 +153,9 @@ def main():
     if os.path.exists(done_path):
         print(f"이미 게시됨: {done_path} — 종료")
         return
+    if not window_open(now):
+        print(f"아직 게시 시각 전 (오늘 {POST_HOUR[now.weekday()]}시, 지금 {now:%H:%M}) — 종료")
+        return
     plan = json.load(open(plan_path))
 
     lines = []
@@ -158,5 +172,25 @@ def main():
     notify("[얼마니] 인스타 게시 완료 — 릴스 댓글 고정하러 가기", "\n".join(lines))
 
 
+def selftest():
+    from datetime import date
+    # 2026-08-08은 토요일 → 11시 창. 이날 10:59엔 안 열리고 11:00엔 열려야 한다.
+    sat = date(2026, 8, 8)
+    assert sat.weekday() == 5
+    assert not window_open(datetime(2026, 8, 8, 10, 59, tzinfo=KST))
+    assert window_open(datetime(2026, 8, 8, 11, 0, tzinfo=KST))
+    assert window_open(datetime(2026, 8, 8, 23, 59, tzinfo=KST))
+    # 일요일은 20시, 월요일은 12시
+    assert not window_open(datetime(2026, 8, 9, 19, 30, tzinfo=KST))
+    assert window_open(datetime(2026, 8, 9, 20, 1, tzinfo=KST))
+    assert not window_open(datetime(2026, 8, 10, 11, 59, tzinfo=KST))
+    assert window_open(datetime(2026, 8, 10, 12, 0, tzinfo=KST))
+    assert set(POST_HOUR) == set(range(7)), "요일 7개 모두 정의되어야 함"
+    print("publish_from_plan self-check ok")
+
+
 if __name__ == "__main__":
-    main()
+    if "--selftest" in sys.argv:
+        selftest()
+    else:
+        main()
