@@ -27,7 +27,7 @@ BACKOFF = [900, 1800]  # 2207051 활동 제한 백오프
 # 요일별 게시 시각(KST). weekday(): 월=0 … 일=6
 # 2026-08-08 변경: cron 1일 1회로는 GitHub 스케줄 지연·누락에 무방비였다(그날 토요일 게시 실패).
 # 이제 30분마다 실행하고, 이 표의 시각이 지났고 아직 done 마커가 없을 때만 게시한다.
-POST_HOUR = {0: 12, 1: 19, 2: 12, 3: 19, 4: 12, 5: 11, 6: 20}
+POST_HOUR = {0: 12, 1: 19, 2: 12, 3: 19, 4: 12, 5: 11, 6: 11}  # 일=11시 (8/8 사용자 변경, 원래 20시)
 
 
 def api(path, params=None, post=False):
@@ -193,9 +193,9 @@ def selftest():
     assert not window_open(datetime(2026, 8, 8, 10, 59, tzinfo=KST))
     assert window_open(datetime(2026, 8, 8, 11, 0, tzinfo=KST))
     assert window_open(datetime(2026, 8, 8, 23, 59, tzinfo=KST))
-    # 일요일은 20시, 월요일은 12시
-    assert not window_open(datetime(2026, 8, 9, 19, 30, tzinfo=KST))
-    assert window_open(datetime(2026, 8, 9, 20, 1, tzinfo=KST))
+    # 일요일은 11시, 월요일은 12시
+    assert not window_open(datetime(2026, 8, 9, 10, 59, tzinfo=KST))
+    assert window_open(datetime(2026, 8, 9, 11, 1, tzinfo=KST))
     assert not window_open(datetime(2026, 8, 10, 11, 59, tzinfo=KST))
     assert window_open(datetime(2026, 8, 10, 12, 0, tzinfo=KST))
     assert set(POST_HOUR) == set(range(7)), "요일 7개 모두 정의되어야 함"
