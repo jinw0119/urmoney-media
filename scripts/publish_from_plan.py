@@ -77,15 +77,28 @@ def publish_item(uid, item):
     return media_id
 
 
+RECENT_HOURS = 6  # '방금 내 시도가 실제로는 성공했나'를 보는 창
+
+
 def already_posted(uid, caption):
-    """최근 10개에서 같은 캡션 첫 줄 탐색 — 2026-08-06 실증: 활동 제한 403 응답이
-    와도 서버에선 게시가 완료되는 경우가 있어, 확인 없는 재시도는 중복 게시가 된다."""
+    """최근 RECENT_HOURS 안에 같은 캡션 첫 줄이 올라갔는지 — 2026-08-06 실증: 활동 제한
+    403 응답이 와도 서버에선 게시가 완료되는 경우가 있어, 확인 없는 재시도는 중복이 된다.
+
+    2026-08-08 수정: 예전엔 '최근 10개'로 봤는데, 그날 게시가 몇 건이었냐에 따라 판정이
+    달라졌다(같은 날 오전엔 8/5 릴스를 잡아 막고, 오후엔 창 밖으로 밀려나 통과). 시간
+    기준으로 바꿔 결정적으로 만든다. 며칠 전 같은 제목은 여기서 막을 일이 아니라
+    소재 순환에서 걸러야 한다.
+    """
     first = (caption or "").strip().split("\n")[0][:60]
     if not first:
         return None
-    res = api(f"{uid}/media", {"fields": "caption,permalink", "limit": 10})
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=RECENT_HOURS)
+    res = api(f"{uid}/media", {"fields": "caption,permalink,timestamp", "limit": 10})
     for m in res.get("data", []):
-        if (m.get("caption") or "").strip().split("\n")[0][:60] == first:
+        if (m.get("caption") or "").strip().split("\n")[0][:60] != first:
+            continue
+        ts = datetime.strptime(m["timestamp"], "%Y-%m-%dT%H:%M:%S%z")
+        if ts >= cutoff:
             return m
     return None
 
