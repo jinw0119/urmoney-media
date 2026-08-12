@@ -136,9 +136,13 @@ def notify(subject, body):
         print(f"메일 실패(무시): {e}")
 
 
-def window_open(now):
-    """오늘의 게시 시각이 지났는가. 30분마다 도는 실행 중 '지금 올릴 차례'만 통과시킨다."""
-    return now.hour >= POST_HOUR[now.weekday()]
+def window_open(now, override=None):
+    """오늘의 게시 시각이 지났는가. 30분마다 도는 실행 중 '지금 올릴 차례'만 통과시킨다.
+
+    계획 JSON에 "post_hour"가 있으면 그날만 그 시각을 쓴다 (요일표 오버라이드).
+    """
+    hour = POST_HOUR[now.weekday()] if override is None else override
+    return now.hour >= hour
 
 
 def main():
@@ -166,10 +170,11 @@ def main():
     if os.path.exists(done_path):
         print(f"이미 게시됨: {done_path} — 종료")
         return
-    if not window_open(now):
-        print(f"아직 게시 시각 전 (오늘 {POST_HOUR[now.weekday()]}시, 지금 {now:%H:%M}) — 종료")
-        return
     plan = json.load(open(plan_path))
+    hour = plan.get("post_hour", POST_HOUR[now.weekday()])
+    if not window_open(now, plan.get("post_hour")):
+        print(f"아직 게시 시각 전 (오늘 {hour}시, 지금 {now:%H:%M}) — 종료")
+        return
 
     lines = []
     for n, item in enumerate(plan["items"]):
@@ -198,6 +203,9 @@ def selftest():
     assert window_open(datetime(2026, 8, 9, 11, 1, tzinfo=KST))
     assert not window_open(datetime(2026, 8, 10, 11, 59, tzinfo=KST))
     assert window_open(datetime(2026, 8, 10, 12, 0, tzinfo=KST))
+    # post_hour 오버라이드 — 목요일(19시)인 8/13에 11시로 앞당기기
+    assert not window_open(datetime(2026, 8, 13, 10, 59, tzinfo=KST), 11)
+    assert window_open(datetime(2026, 8, 13, 11, 0, tzinfo=KST), 11)
     assert set(POST_HOUR) == set(range(7)), "요일 7개 모두 정의되어야 함"
     print("publish_from_plan self-check ok")
 
