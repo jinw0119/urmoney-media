@@ -2,8 +2,9 @@
 
 맥이 닫혀 있으면 콘텐츠 생성이 안 되는데 맥 스스로는 알릴 수 없으므로,
 GitHub Actions(클라우드)가 대신 확인한다.
-- 밤 23:30 KST 체크: 내일 계획이 있어야 함 (21:00/22:33 생성 이후 시점)
-- 아침 08:00 KST 체크: 오늘 계획이 있어야 함 (정오 게시 전 마지막 경고)
+- 밤 23:35 KST 체크: 내일 계획이 있어야 함 (21:00/22:33 생성 이후 시점)
+- 아침 08:05 KST 체크: 오늘 계획이 있어야 함 (11시 게시 전 마지막 경고)
+- 낮 12:35 KST 체크: 오늘 게시가 실제로 됐는지 (실패를 그날 안에 알아야 손을 쓴다)
 대상일 규칙: 실행 시각이 20시 이후면 내일, 아니면 오늘 (cron 지연에도 자동 보정)
 
 환경변수: GMAIL_APP_PASSWORD, DISCORD_WEBHOOK, (테스트용) TEST_DATE
@@ -71,7 +72,9 @@ def check_published(now):
 def main():
     now = datetime.now(KST)
     test_date = os.environ.get("TEST_DATE", "").strip()
-    if not test_date and now.hour >= 21:  # 모든 게시 시각(최대 20시)이 지난 뒤
+    # 게시 시각(post_hour 11)이 지난 뒤부터 게시 완료를 따진다.
+    # 21시 이후로 잡아뒀더니 실패를 12시간 뒤에 알게 돼 그날 손쓸 수가 없었다.
+    if not test_date and now.hour >= 12:
         check_published(now)
     if test_date:
         target, label = test_date, "테스트"
@@ -89,7 +92,7 @@ def main():
             f"원인: 맥이 닫혀 있거나 잠들어 있어 콘텐츠 생성이 실행되지 못했습니다.\n"
             f"조치: 맥북을 열고 전원을 연결해 주세요 — 여는 순간 자동으로 생성이 따라잡고,\n"
             f"게시 계획이 push되면 클라우드가 알아서 게시합니다.\n"
-            f"(정오 게시 시간이 이미 지났다면, 다음 세션에서 수동 게시를 요청해 주세요)")
+            f"(11시 게시 시각이 이미 지났다면, 다음 세션에서 수동 게시를 요청해 주세요)")
     send_discord(f"⚠️ **{label}({target}) 콘텐츠 미생성 — 맥북을 열어주세요**\n{body}")
     send_mail(f"[얼마니 ⚠️] {label} 콘텐츠 미생성 — 맥북을 열어주세요", body)
 
