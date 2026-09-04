@@ -1,0 +1,272 @@
+<title>오피스 와이프 스토리보드</title>
+<style>
+  :root{
+    --bg:#EFE9E1; --card:#FBF8F3; --ink:#232A31; --sub:#6E6656;
+    --line:#3A3A3A33; --panel:#cabfa8; --panelface:#efe7d6;
+    --narr:#e4dccb; --band:#dcd2bf; --bub:#ffffff; --bubline:#33475B;
+    --wine:#B23A48; --accentchip:#243447; --thought:#8a8168;
+    --cardborder:#0000001a;
+  }
+  :root:not([data-theme="light"]){}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17140f; --card:#211d16; --ink:#ece4d5; --sub:#a99f8a;
+      --line:#ffffff22; --panel:#4a4436; --panelface:#2a251c;
+      --narr:#2e2a20; --band:#332e22; --bub:#f3efe6; --bubline:#8aa2bd;
+      --wine:#e08592; --accentchip:#9db4cf; --thought:#9a8f76;
+      --cardborder:#ffffff14;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17140f; --card:#211d16; --ink:#ece4d5; --sub:#a99f8a;
+    --line:#ffffff22; --panel:#4a4436; --panelface:#2a251c;
+    --narr:#2e2a20; --band:#332e22; --bub:#f3efe6; --bubline:#8aa2bd;
+    --wine:#e08592; --accentchip:#9db4cf; --thought:#9a8f76;
+    --cardborder:#ffffff14;
+  }
+
+  body{background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+    margin:0;padding:0 0 60px;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px;}
+  header.top{padding:34px 20px 14px;max-width:1280px;margin:0 auto;}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em;}
+  .subtitle{color:var(--sub);font-size:14px;margin:0 0 2px;}
+  .metaline{color:var(--sub);font-size:12.5px;margin:6px 0 0;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;background:var(--card);
+    border:1px solid var(--cardborder);border-radius:12px;padding:14px 16px;margin:16px 0 26px;font-size:12.5px;}
+  .legend b{color:var(--ink);}
+  .legend .li{display:flex;align-items:center;gap:6px;color:var(--sub);}
+  .swatch{width:22px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--line);}
+
+  .phase{grid-column:1/-1;margin:22px 0 2px;font-size:13px;font-weight:700;color:var(--wine);
+    letter-spacing:.02em;border-top:1px dashed var(--line);padding-top:16px;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:20px;}
+
+  .card{background:var(--card);border:1px solid var(--cardborder);border-radius:12px;
+    overflow:hidden;display:flex;flex-direction:column;}
+  .cap{display:flex;align-items:center;gap:7px;padding:9px 11px;font-size:12px;border-bottom:1px solid var(--line);}
+  .num{font-weight:800;font-size:13px;}
+  .tbadge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;
+    background:var(--accentchip);color:var(--card);}
+  .capname{color:var(--sub);flex:1;}
+  .cnt{color:var(--sub);font-variant-numeric:tabular-nums;font-size:11px;}
+
+  /* artboard: 4:5 */
+  .board{position:relative;aspect-ratio:1080/1350;margin:10px;border:2px solid var(--panel);
+    border-radius:4px;background:var(--panelface);display:flex;flex-direction:column;overflow:hidden;}
+  .narr{background:var(--narr);color:var(--ink);font-size:10.5px;line-height:1.4;font-weight:700;
+    text-align:center;padding:7px 8px;min-height:26px;display:flex;align-items:center;justify-content:center;white-space:pre-line;}
+  .panels{flex:1;display:flex;flex-direction:column;gap:4px;padding:4px;}
+  .panel{position:relative;flex:1;border:1.5px solid var(--panel);border-radius:3px;
+    background:linear-gradient(180deg,var(--panelface),color-mix(in srgb,var(--panelface) 82%, #000 6%));
+    min-height:40px;overflow:hidden;}
+  .panel.big{flex:3;}
+  .hz{position:absolute;left:6px;right:6px;top:4px;display:flex;gap:5px;flex-wrap:wrap;}
+  .hz.r{justify-content:flex-end;}
+  /* speech bubble */
+  .bub{position:relative;max-width:66%;background:var(--bub);border:1.4px solid var(--bubline);
+    border-radius:9px;padding:4px 7px;font-size:10px;line-height:1.32;color:#232A31;
+    box-shadow:0 1px 2px #0003;white-space:pre-line;}
+  .bub .sp{display:block;font-size:8.5px;font-weight:800;color:var(--bubline);margin-bottom:1px;letter-spacing:.02em;}
+  .bub.think{border-style:dashed;background:color-mix(in srgb,var(--bub) 86%, var(--panelface));font-style:normal;}
+  .bub.think .sp{color:var(--thought);}
+  .bub.wine{border-color:var(--wine);} .bub.wine .sp{color:var(--wine);}
+  .tail{position:absolute;bottom:-6px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--bubline);}
+  .tail.l{left:12px;} .tail.r{right:12px;}
+  /* character markers bottom */
+  .mk{position:absolute;bottom:4px;left:6px;right:6px;display:flex;justify-content:space-between;pointer-events:none;}
+  .chip{font-size:9px;font-weight:700;color:var(--card);background:#6b6250cc;border-radius:20px;padding:2px 6px;}
+  .chip.name{background:var(--wine);} /* first appearance nametag */
+  .center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;
+    font-size:13px;font-weight:800;color:#fff;padding:16px;white-space:pre-line;line-height:1.4;
+    background:linear-gradient(180deg,#20232a55,#20232abb);}
+  .band{background:var(--band);color:var(--ink);font-size:10px;font-weight:700;text-align:center;
+    padding:6px 8px;white-space:pre-line;border-top:1px dashed var(--panel);}
+  .cta{background:var(--wine);color:#fff;font-size:9.5px;font-weight:700;text-align:center;padding:5px 6px;white-space:pre-line;line-height:1.4;}
+  .wm{position:absolute;right:5px;bottom:3px;font-size:8px;color:var(--sub);opacity:.7;}
+  .note{padding:8px 11px 11px;font-size:11px;color:var(--sub);line-height:1.45;border-top:1px solid var(--line);}
+  .note b{color:var(--ink);}
+  .titlebadge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;}
+  .titlebadge .kicker{font-size:8px;color:var(--sub);margin-bottom:6px;}
+  .titlebadge .big{font-size:20px;font-weight:900;line-height:1.12;color:var(--ink);}
+  .titlebadge .big .hl{color:var(--wine);}
+  footer{max-width:1280px;margin:30px auto 0;padding:16px 20px;color:var(--sub);font-size:12px;border-top:1px solid var(--line);}
+</style>
+
+<header class="top">
+  <h1>「오피스 와이프」(1) — 스토리보드</h1>
+  <p class="subtitle">v6 기획안 기준 · 20장 · 1080×1350(4:5) · 이해도 최우선 / 레이아웃 4종</p>
+  <p class="metaline">AI 작화·조판 참고용 와이어프레임. 각 프레임 = 실제 슬라이드 비율. 상단 띠=나레이션, 박스=컷, 흰 말풍선=대사(◤◢=꼬리 방향), 점선=속마음, 하단 띠=마무리 나레이션/CTA.</p>
+  <div class="legend">
+    <span class="li"><span class="swatch" style="background:var(--narr)"></span><b>상단 나레이션 띠</b> (Bold 46px, y36~186)</span>
+    <span class="li"><span class="swatch" style="background:var(--bub);border-color:var(--bubline)"></span><b>말풍선</b> 화자칩+대사, 헤드룸 상단28%</span>
+    <span class="li"><span class="swatch" style="background:transparent;border-style:dashed"></span><b>속마음</b> 구름(점선)</span>
+    <span class="li"><span class="swatch" style="background:var(--wine)"></span><b>첫등장 이름표</b> / <b>강조 카드·CTA</b></span>
+    <span class="li">■ T① 표준2단 · T② 강조1컷 · T③ 명대사카드 · T④ 마무리밴드</span>
+  </div>
+</header>
+
+<div class="wrap"><div class="grid" id="grid"></div></div>
+
+<footer>워터마크 @might.be.your.story · 카운터 N/20 · 픽션 고지(표지·S20·캡션). 말풍선 색코딩 없음(흰 면 통일) — 화자 식별은 위치 인접 + 첫등장 이름표 + 꼬리.</footer>
+
+<script>
+// L=좌 발화(꼬리 좌), R=우 발화(꼬리 우), think=속마음
+const S = [
+ {n:"1",t:"표지",cnt:"",cover:{kicker:"@might.be.your.story · 어쩌면, 당신의 이야기",big:['「오피스 와이프」','<span class="hl">(1)</span>']},
+  markers:[["수연 ◀관찰",""],["아내+아이 ▶",""]],
+  band:"모두가 팀장님을 욕하던 날,\n진짜 이야기는 따로 있었다",
+  bubblesCover:[{sp:"아내",side:"R",text:"저, 강민재 씨\n아내인데요."}],
+  note:"<b>표지</b> 수연을 [좌] 놀란 옆얼굴(관찰자=독자 시점)로. 제목 고정, (1)만 변동."},
+
+ {ph:"기 · 세팅"},
+ {n:"2",t:"T①",cnt:"2/20",narr:"나는 이 팀 3년차 김수연.\n소문이라면, 누구보다 빨랐다.",
+  p:[{b:[{sp:"수연",side:"L",text:"야, 그 얘기 들었어?\n내가 제일 먼저 알려주는 거야."},{sp:"동료A",side:"R",text:"언니는 진짜\n소식통이라니까ㅋㅋ"}],mk:[["수연 ◀","name"],["동료A ▶",""]]},
+      {b:[{sp:"수연(속)",side:"L",think:1,text:"그땐 몰랐다. 그 '빠른 입'이\n누굴 찌르게 될지."}],mk:[["수연",""],["",""]]}],
+  note:"<b>화자 소개.</b> 수연 정면+이름표. 끝 속마음=20장 여는 예고 훅."},
+
+ {n:"3",t:"T①",cnt:"3/20",narr:"강민재. 우리 팀 막내.\n미혼이라 다들 챙겨주던, 착한 후배.",
+  p:[{b:[{sp:"수연",side:"L",text:"민재 씨, 오늘도 혼자 먹어?\n이거 같이 먹자."},{sp:"민재",side:"R",text:"헤헤 감사합니다\n선배~"}],mk:[["수연 ◀","" ],["민재 ▶","name"]]},
+      {b:[{sp:"동료B",side:"R",text:"민재 씨는 언제 여친 생겨?\n이 착한 걸 아무도~"},{sp:"민재",side:"L",text:"에이, 저 같은 게 무슨~\n아직 혼자가 편해요."}],mk:[["민재 ◀",""],["동료B ▶",""]]}],
+  note:"<b>민재 소개.</b> '미혼'·'혼자가 편해요'=거짓말 씨앗. 도시락=복선."},
+
+ {n:"4",t:"T①",cnt:"4/20",narr:"소문은, 아주 사소한 데서 시작됐다.",
+  p:[{b:[{sp:"동료C",side:"L",text:"어제 팀장님이랑 민재 씨,\n둘이 따로 저녁 먹더라?"},{sp:"동료A",side:"R",text:"둘이서?\n…팀장님 유부녀인데?"}],mk:[["동료C ◀",""],["지현·민재(배경) ▶","name"]]},
+      {b:[{sp:"동료C",side:"L",text:"딱 봐도 유부녀가\n착한 애 꼬시는 그림이지."},{sp:"수연(속)",side:"R",think:1,text:"사실인지 아닌지는,\n아무도 확인하지 않았다."}],mk:[["",""],["",""]]}],
+  note:"<b>팀장 소개+소문 발단.</b> 배경에 지현·민재 붙어있는 정황(근거)+지현 이름표. 유부녀 설정을 여기서 깜."},
+
+ {n:"5",t:"T①",cnt:"5/20",narr:"그 소문을 가장 크게 퍼뜨린 사람은,\n바로 나였다.",
+  p:[{b:[{sp:"수연",side:"L",text:"진짜 어이없지 않아?\n유부녀가 팀 막내를 넘봐?"},{sp:"동료A",side:"R",text:"언니 말 들으니\n확실하네…"}],mk:[["수연 ◀",""],["동료 ▶",""]]},
+      {b:[{sp:"수연(속)",side:"L",think:1,wine:1,text:"팀장님 얼굴만 봐도 화가 났다.\n나는, 확신하고 있었다."}],mk:[["지현(지나감)",""],["",""]]}],
+  note:"<b>화자=여론 주동자 확정.</b> 감정 축(★핵심 속마음 SemiBold). S19 죄책감의 발판."},
+
+ {n:"6",t:"T①",cnt:"6/20",narr:"팀장님은 아무 변명도 하지 않았다.\n나는 그게 더 뻔뻔해 보였다.",
+  p:[{b:[{sp:"동료A",side:"L",text:"팀장님은 왜\n해명을 안 하실까?"},{sp:"수연",side:"R",text:"찔리니까 그렇지.\n떳떳하면 말을 하겠지."}],mk:[["동료 ◀",""],["수연 ▶",""]]},
+      {b:[{sp:"수연(속)",side:"R",think:1,text:"그때 팀장님 표정을,\n나는 완전히 잘못 읽고 있었다."}],mk:[["지현(침묵)",""],["",""]]}],
+  note:"<b>피해자 복선.</b> 지현의 침묵을 '찔림'으로 오독하는 화자 시점을 심음."},
+
+ {ph:"승 · 균열"},
+ {n:"7",t:"T④",cnt:"7/20",narr:"그러던 어느 오후,\n안내데스크에서 전화가 왔다.",
+  p:[{b:[{sp:"수화기",side:"R",text:"강민재 씨 찾는 손님이요.\n가족분이시래요."},{sp:"수연",side:"L",text:"가족…이요?"}],mk:[["수연 ◀",""],["",""]]},
+      {b:[{sp:"민재",side:"R",text:"…네? 저희 가족은\n다 지방에 있는데…"},{sp:"수연",side:"L",text:"민재 씨, 로비에\n가족분 오셨대요."}],mk:[["수연 ◀",""],["민재 ▶",""]]}],
+  band:"미혼이라던 민재 씨에게, 웬 가족이 찾아왔다.",
+  note:"<b>첫 균열.</b> [T④] 마무리 밴드로 끊음. '지방' 대사=S15 회수 복선."},
+
+ {n:"8",t:"T①",cnt:"8/20",narr:"가족이라는 말에, 민재 씨 표정이\n이상하게 굳었다.",
+  p:[{b:[{sp:"수연",side:"L",text:"누가 오신 거예요?\n부모님?"},{sp:"민재",side:"R",text:"…아니요. 제가\n직접 내려가 볼게요."}],mk:[["수연 ◀",""],["민재 ▶(식은땀)",""]]},
+      {b:[{sp:"수연(속)",side:"R",think:1,text:"민재 씨는, 나를\n말리고 싶어 하는 얼굴이었다."}],mk:[["",""],["",""]]}],
+  note:"<b>빌드업.</b> 아내 등장 전 긴장 한 박자."},
+
+ {n:"9",t:"T①",cnt:"9/20",narr:"우리는 함께 로비로 내려갔다.\n민재 씨는 계속 뒤처졌다.",
+  p:[{b:[{sp:"수연",side:"L",text:"왜 그래요,\n안색이 왜 그래?"},{sp:"민재",side:"R",text:"…아니에요.\n아무것도."}],mk:[["수연 ◀(엘베)",""],["민재 ▶",""]]},
+      {b:[{sp:"수연(속)",side:"L",think:1,text:"문이 열리면 뭐가 있을지,\n나는 상상도 못 했다."}],mk:[["",""],["",""]]}],
+  note:"<b>빌드업(짧게).</b> '문이 열린다' 물리 긴장으로 S10 극대화."},
+
+ {n:"10",t:"T②",cnt:"10/20",narr:"로비에는, 아무도 예상 못 한\n사람이 서 있었다.",
+  big:1,p:[{b:[{sp:"아내",side:"R",text:"안녕하세요~ 저,\n강민재 씨 아내예요."},{sp:"수연",side:"L",text:"…아내…요?"},{sp:"수연(속)",side:"L",think:1,text:"민재 씨는 분명,\n미혼이라고 했었다."}],mk:[["수연 ◀",""],["아내+아이 ▶","name"]]}],
+  note:"<b>★강조 1컷 ⓐ 첫 충격.</b> 아내 이름표. 표지 대사 회수. 대형 1컷."},
+
+ {n:"11",t:"T①",cnt:"11/20",narr:"여자 옆엔, 다섯 살쯤 된 아이가 있었다.",
+  p:[{b:[{sp:"아이",side:"L",text:"엄마, 아빠 언제 와?\n아빠 보고 싶어."},{sp:"아내",side:"R",text:"곧 올 거야~"}],mk:[["아이 ◀",""],["아내 ▶",""]]},
+      {b:[{sp:"수연(속)",side:"R",think:1,text:"혼자가 편하다던 사람에게,\n아빠를 기다리는 아이가 있었다."}],mk:[["",""],["",""]]}],
+  note:"<b>S3 도시락·'혼자가 편해요' 복선 회수.</b> 아이 얼굴 노출 최소."},
+
+ {n:"12",t:"T①",cnt:"12/20",narr:"그제야 나타난 민재 씨는,\n그 여자를 보자마자 얼어붙었다.",
+  p:[{b:[{sp:"아내",side:"R",text:"자기야! 왜 그래,\n서프라이즈!"},{sp:"민재",side:"L",text:"…네가, 왜 여기…"}],mk:[["민재 ◀(창백)",""],["아내 ▶",""]]},
+      {b:[{sp:"아이",side:"L",text:"아빠!!"},{sp:"수연(속)",side:"R",think:1,text:"'자기야'. 그 한마디에,\n소문이 통째로 무너졌다."}],mk:[["",""],["",""]]}],
+  note:"<b>관계 확정.</b> 아내·아이 모두 민재를 '자기/아빠'로. 의심의 여지 제거."},
+
+ {n:"13",t:"T④",cnt:"13/20",narr:"민재 씨는 목소리를 낮췄다.",
+  p:[{b:[{sp:"민재",side:"L",text:"여기서 이러지 마.\n나중에 얘기해."},{sp:"아내",side:"R",text:"뭘 나중에?\n나 당신 아내잖아."}],mk:[["민재 ◀",""],["아내 ▶",""]]},
+      {b:[{sp:"아내",side:"R",text:"…설마 당신, 회사에\n나 얘기 안 했어?"}],mk:[["민재 ◀(침묵)",""],["아내 ▶",""]]}],
+  band:"민재 씨는, 회사 누구에게도 아내를 말한 적이 없었다.",
+  note:"<b>은폐 확인.</b> [T④] 밴드. 민재 침묵(말풍선 없음)."},
+
+ {ph:"전 · 진실을 한 컷씩"},
+ {n:"14",t:"T②",cnt:"14/20",narr:"소문을 들은 사람들이 로비로 모였다.\n그중엔, 팀장님도 있었다.",
+  big:1,p:[{b:[{sp:"지현",side:"C",text:"…민재 씨.\n저 사람이… 왜…"},{sp:"수연(속)",side:"L",think:1,wine:1,text:"팀장님은, 저 여자가 아니라\n'민재 씨'를 아는 얼굴이었다."}],mk:[["지현(하얗게)",""],["",""]]}],
+  note:"<b>★강조 1컷 ⓑ.</b> 왜 창백한지 한 박자(S6 오독 교정 시작)."},
+
+ {n:"15",t:"T①",cnt:"15/20",narr:"두 여자의 말을 나란히 놓자,\n우리가 알던 민재 씨는 없었다.",
+  p:[{b:[{sp:"지현",side:"L",text:"저 사람이랑…\n같이, 사세요?"},{sp:"아내",side:"R",text:"네? 당연하죠. 지방에서요,\n애 유치원 때문에 저희끼리."}],mk:[["지현 ◀",""],["아내 ▶",""]]},
+      {b:[{sp:"지현",side:"L",text:"…지방에, 가족이…"},{sp:"수연(속)",side:"R",think:1,text:"팀장님은, 이 사실을\n지금 처음 듣는 얼굴이었다."}],mk:[["",""],["",""]]}],
+  note:"<b>진실 A: 함께 산다.</b> S7 '지방' 회수. 팀장도 몰랐다는 신호."},
+
+ {n:"16",t:"T①",cnt:"16/20",narr:"팀장님의 목소리가, 점점 작아졌다.",
+  p:[{b:[{sp:"지현",side:"L",text:"민재 씨가 나한텐…\n이혼했다고 했어요. 분명히."},{sp:"아내",side:"R",text:"이혼이요? 저희가요?\n무슨 소리세요."}],mk:[["지현 ◀",""],["아내 ▶",""]]},
+      {b:[{sp:"아내",side:"R",text:"…그쪽한테,\n결혼하자고 했어요?"}],mk:[["지현 ◀(고개떨굼)",""],["아내 ▶",""]]}],
+  note:"<b>진실 B: 이혼 거짓말.</b> 주어 명시('민재 씨가 나한텐'). 가해자→피해자 뒤집힘."},
+
+ {n:"17",t:"T①",cnt:"17/20",narr:"두 여자의 말이 하나로 맞춰지고 있었다.",
+  p:[{b:[{sp:"아내",side:"R",text:"저한텐 주말에만 내려왔어요.\n평일엔 여기서, 이 팀장님이랑…"},{sp:"지현",side:"L",text:"저도 남편과는 진작 갈라섰고…\n미혼이라던 저 사람을 믿었을 뿐이에요."}],mk:[["지현 ◀",""],["아내 ▶",""]]},
+      {b:[{sp:"아내",side:"R",text:"그럼 저희 둘 다,\n저 사람한테 속은 거네요."},{sp:"지현",side:"L",text:"…네. 저도,\n아무것도 몰랐어요."}],mk:[["",""],["",""]]}],
+  note:"<b>진실 C: 둘 다 속음 + 팀장 피해 성립 한 줄.</b> '유부녀인데 왜 피해자' 도덕 혼란 해소."},
+
+ {ph:"결 · 반전 여파 (늘리지 않음)"},
+ {n:"18",t:"T③",cnt:"18/20",narr:"그제야 알았다.\n속은 건, 팀장님도 마찬가지였다.",
+  card:"가해자인 줄 알았던 사람이\n사실은, 가장 크게 속은 사람이었다",
+  note:"<b>명대사 카드.</b> 어두운 스크림+흰 글자. 저장·공유 유발. 1편 1장만."},
+
+ {n:"19",t:"T②",cnt:"19/20",narr:"사람들은 아까와 완전히 다른 눈으로,\n두 여자를 바라봤다.",
+  big:1,p:[{b:[{sp:"동료C",side:"R",text:"우리가 팀장님 욕한 게…\n다 틀린 거였네."},{sp:"수연(속)",side:"L",think:1,wine:1,text:"제일 앞장서서 욕했던 내가,\n제일 부끄러웠다."}],mk:[["동료들",""],["수연 ▶",""]]}],
+  note:"<b>★강조 1컷 ⓒ.</b> 여론 역전(인과 명시)+화자 죄책감 정점(S5 회수)."},
+
+ {n:"20",t:"T④",cnt:"20/20",narr:"내가 그렇게 손가락질했던 사람은,\n팀장님이 아니었다.",
+  p:[{b:[],mk:[["지현(등 돌림·정적)",""],["",""]]},
+      {b:[{sp:"부장",side:"R",text:"…민재 걔, 요즘 법인카드\n씀씀이가. 확인해 봐, 지금."}],mk:[["",""],["부장 ▶","name"]]}],
+  band:"그리고 이 일은, 여기서 끝이 아니었다.",
+  cta:"🔖 2편 놓치지 않으려면 팔로우 — 매주 화·금 밤 9시\n「오피스 와이프」(2)에서 계속됩니다",
+  note:"<b>엔딩+법인카드 훅+CTA.</b> 부장 이름표+맥락(회삿돈 냄새). 1편 완결, 떡밥만."}
+];
+
+const grid=document.getElementById('grid');
+function bubHTML(b){
+  const cls=['bub']; if(b.think)cls.push('think'); if(b.wine)cls.push('wine');
+  const tail = b.side==='C' ? '<span class="tail l" style="left:50%;transform:translateX(-50%)"></span>'
+             : b.side==='R' ? '<span class="tail r"></span>' : '<span class="tail l"></span>';
+  return `<div class="${cls.join(' ')}"><span class="sp">${b.sp}</span>${b.text}${tail}</div>`;
+}
+function panelHTML(p,big){
+  let bubs=(p.b||[]).map(bubHTML).join('');
+  // split bubbles left/right into two headroom rows by side
+  const left=(p.b||[]).filter(b=>b.side==='L').map(bubHTML).join('');
+  const right=(p.b||[]).filter(b=>b.side==='R').map(bubHTML).join('');
+  const center=(p.b||[]).filter(b=>b.side==='C').map(bubHTML).join('');
+  let inner='';
+  if(left)inner+=`<div class="hz">${left}</div>`;
+  if(right)inner+=`<div class="hz r">${right}</div>`;
+  if(center)inner+=`<div class="hz" style="justify-content:center">${center}</div>`;
+  let mk='';
+  if(p.mk){mk=`<div class="mk">${p.mk.map(m=>m[0]?`<span class="chip ${m[1]||''}">${m[0]}</span>`:'<span></span>').join('')}</div>`;}
+  return `<div class="panel ${big?'big':''}">${inner}${mk}</div>`;
+}
+S.forEach(s=>{
+  if(s.ph){const d=document.createElement('div');d.className='phase';d.textContent=s.ph;grid.appendChild(d);return;}
+  const card=document.createElement('div');card.className='card';
+  let boardInner='';
+  if(s.cover){
+    boardInner=`<div class="titlebadge"><div class="kicker">${s.cover.kicker}</div><div class="big">${s.cover.big.join(' ')}</div></div>`;
+    // cover bubbles + markers overlaid at bottom
+    if(s.bubblesCover){boardInner+=`<div class="hz r" style="top:auto;bottom:70px">${s.bubblesCover.map(bubHTML).join('')}</div>`;}
+    if(s.markers){boardInner+=`<div class="mk">${s.markers.map(m=>`<span class="chip">${m[0]}</span>`).join('')}</div>`;}
+    if(s.band)boardInner+=`<div class="band" style="position:absolute;left:0;right:0;bottom:0">${s.band}</div>`;
+  }else{
+    if(s.narr)boardInner+=`<div class="narr">${s.narr}</div>`;
+    if(s.card){
+      boardInner+=`<div class="panels"><div class="panel big"><div class="center">${s.card}</div></div></div>`;
+    }else if(s.p){
+      boardInner+=`<div class="panels">${s.p.map(p=>panelHTML(p,s.big)).join('')}</div>`;
+    }
+    if(s.band)boardInner+=`<div class="band">${s.band}</div>`;
+    if(s.cta)boardInner+=`<div class="cta">${s.cta}</div>`;
+  }
+  boardInner+=`<div class="wm">@might.be.your.story</div>`;
+  card.innerHTML=`<div class="cap"><span class="num">${s.n}</span>${s.t?`<span class="tbadge">${s.t}</span>`:''}<span class="capname">${s.cnt?'':'표지'}</span><span class="cnt">${s.cnt||''}</span></div>
+    <div class="board">${boardInner}</div>
+    ${s.note?`<div class="note">${s.note}</div>`:''}`;
+  grid.appendChild(card);
+});
+</script>
