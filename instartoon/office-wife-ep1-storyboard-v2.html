@@ -1,0 +1,305 @@
+<title>오피스 와이프 스토리보드 v2</title>
+<style>
+  :root{
+    --bg:#EFE9E1; --card:#FBF8F3; --ink:#232A31; --sub:#6E6656;
+    --line:#3A3A3A33; --panel:#cabfa8; --panelface:#efe7d6;
+    --narr:#e4dccb; --band:#dcd2bf; --bub:#ffffff; --bubline:#33475B;
+    --wine:#B23A48; --accentchip:#243447; --thought:#8a8168;
+    --cardborder:#0000001a; --plain:#8a9199; --evidence:#d8b26a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17140f; --card:#211d16; --ink:#ece4d5; --sub:#a99f8a;
+      --line:#ffffff22; --panel:#4a4436; --panelface:#2a251c;
+      --narr:#2e2a20; --band:#332e22; --bub:#f3efe6; --bubline:#8aa2bd;
+      --wine:#e08592; --accentchip:#9db4cf; --thought:#9a8f76;
+      --cardborder:#ffffff14; --plain:#5b6570; --evidence:#c79a52;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17140f; --card:#211d16; --ink:#ece4d5; --sub:#a99f8a;
+    --line:#ffffff22; --panel:#4a4436; --panelface:#2a251c;
+    --narr:#2e2a20; --band:#332e22; --bub:#f3efe6; --bubline:#8aa2bd;
+    --wine:#e08592; --accentchip:#9db4cf; --thought:#9a8f76;
+    --cardborder:#ffffff14; --plain:#5b6570; --evidence:#c79a52;
+  }
+
+  body{background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+    margin:0;padding:0 0 60px;}
+  header.top{padding:34px 20px 14px;max-width:1320px;margin:0 auto;}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em;}
+  .subtitle{color:var(--sub);font-size:14px;margin:0 0 2px;}
+  .metaline{color:var(--sub);font-size:12.5px;margin:6px 0 0;line-height:1.6;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;background:var(--card);
+    border:1px solid var(--cardborder);border-radius:12px;padding:14px 16px;margin:16px 0 8px;font-size:12.5px;max-width:1280px;}
+  .legend .li{display:flex;align-items:center;gap:6px;color:var(--sub);}
+  .swatch{width:22px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--line);}
+
+  .charrow{display:flex;flex-wrap:wrap;gap:10px;max-width:1280px;margin:0 20px 24px;}
+  .cchip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--cardborder);
+    border-radius:20px;padding:6px 12px 6px 6px;font-size:12px;}
+  .cdot{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;}
+  .cdot.suyeon{background:#111;} .cdot.jihyeon{background:#6B5E52;} .cdot.minseo{background:#B08D5B;color:#3a2e13}
+  .cdot.minjae{background:#3A2E27;} .cdot.child{background:#c79a52;} .cdot.bujang{background:#8a8f8a;}
+  .cchip b{font-size:12.5px;}
+  .cchip span.d{color:var(--sub);}
+
+  .phase{max-width:1280px;margin:24px 20px 2px;font-size:13px;font-weight:700;color:var(--wine);
+    letter-spacing:.02em;border-top:1px dashed var(--line);padding-top:16px;}
+
+  .wrap{max-width:1320px;margin:0 auto;padding:0 20px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
+
+  .card{background:var(--card);border:1px solid var(--cardborder);border-radius:12px;
+    overflow:hidden;display:flex;flex-direction:column;}
+  .cap{display:flex;align-items:center;gap:7px;padding:9px 11px;font-size:12px;border-bottom:1px solid var(--line);}
+  .num{font-weight:800;font-size:13px;}
+  .tbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;color:#fff;}
+  .tbadge.evi{background:var(--evidence);color:#3a2e13;}
+  .tbadge.mirror{background:#7c8ba1;}
+  .tbadge.reveal{background:var(--wine);}
+  .tbadge.low{background:#6b7d5e;}
+  .tbadge.phys{background:#a1567c;}
+  .tbadge.card{background:#232A31;}
+  .tbadge.hand{background:#9a8452;}
+  .tbadge.ots{background:#5e7c8b;}
+  .capname{color:var(--sub);flex:1;}
+  .cnt{color:var(--sub);font-variant-numeric:tabular-nums;font-size:11px;}
+  .budget{font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;}
+  .budget.plain{background:var(--plain);color:#fff;}
+  .budget.rich{background:var(--wine);color:#fff;}
+
+  .board{position:relative;aspect-ratio:1080/1350;margin:10px;border:2px solid var(--panel);
+    border-radius:4px;background:var(--panelface);display:flex;flex-direction:column;overflow:hidden;}
+  .board.rich{background:linear-gradient(160deg,var(--panelface),color-mix(in srgb, var(--evidence) 18%, var(--panelface)));}
+  .narr{background:var(--narr);color:var(--ink);font-size:10.5px;line-height:1.4;font-weight:700;
+    text-align:center;padding:7px 8px;min-height:26px;display:flex;align-items:center;justify-content:center;white-space:pre-line;}
+  .stage{flex:1;position:relative;margin:5px;border:1.5px solid var(--panel);border-radius:3px;
+    background:linear-gradient(180deg,var(--panelface),color-mix(in srgb,var(--panelface) 82%, #000 6%));
+    overflow:hidden;}
+
+  /* scene motif icons drawn in css */
+  .motif{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.9;}
+  .phoneframe{width:46%;height:62%;background:#1c1f22;border-radius:14px;border:3px solid #444;padding:8px;box-sizing:border-box;}
+  .phonescreen{width:100%;height:100%;background:#f5f2ea;border-radius:6px;padding:8%;box-sizing:border-box;font-size:8px;line-height:1.5;color:#333;overflow:hidden;}
+  .bubble-msg{background:#ffe27a;border-radius:8px;padding:3px 6px;margin-bottom:5px;display:inline-block;max-width:90%;}
+  .bubble-msg.mine{background:#fff;border:1px solid #ccc;}
+  .desk{position:absolute;bottom:14%;left:8%;right:8%;height:26%;background:#c9b48a55;border:1.5px solid var(--panel);border-radius:4px;}
+  .objchip{position:absolute;width:16%;aspect-ratio:1;border-radius:5px;background:#00000022;border:1px solid var(--panel);}
+  .doorgap{position:absolute;left:50%;top:0;bottom:0;width:6%;background:#00000030;transform:translateX(-50%);}
+  .mirrorframe{position:absolute;left:14%;right:14%;top:8%;bottom:8%;border:5px solid #99968a;border-radius:8px;background:#e9e4d6;}
+  .lowangle{position:absolute;bottom:0;left:0;right:0;height:34%;background:linear-gradient(0deg,#0000001f,transparent);}
+  .backlit{position:absolute;left:38%;right:0;top:0;bottom:0;background:radial-gradient(circle at 30% 45%,#fff8e0cc,#00000000 70%);}
+  .liquid{position:absolute;left:36%;bottom:18%;width:3px;height:22%;background:#5b3a22aa;border-radius:2px;}
+  .idcard{position:absolute;left:50%;bottom:18%;width:14%;aspect-ratio:0.7;background:#f5f0e2;border:1.5px solid #999;border-radius:3px;transform:translateX(-50%) rotate(-8deg);}
+  .toilet{position:absolute;left:20%;right:20%;top:6%;bottom:6%;border:5px solid #b9c4c9;border-radius:6px;background:#eef2f2;}
+  .corridor{position:absolute;inset:6%;background:repeating-linear-gradient(90deg,#00000010 0 2%, transparent 2% 14%);}
+
+  .silbadge{position:absolute;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:9px;font-weight:800;color:#fff;border:1.5px solid #fff8;box-shadow:0 1px 3px #0004;}
+  .sb-suyeon{background:#111;} .sb-jihyeon{background:#6B5E52;} .sb-minseo{background:#B08D5B;color:#3a2e13}
+  .sb-minjae{background:#3A2E27;} .sb-child{background:#c79a52;color:#3a2e13} .sb-bujang{background:#8a8f8a;}
+
+  .bub{position:relative;max-width:78%;background:var(--bub);border:1.4px solid var(--bubline);
+    border-radius:9px;padding:4px 7px;font-size:9.5px;line-height:1.32;color:#232A31;
+    box-shadow:0 1px 2px #0003;white-space:pre-line;position:absolute;}
+  .bub .sp{display:block;font-size:8px;font-weight:800;color:var(--bubline);margin-bottom:1px;}
+  .bub.think{border-style:dashed;background:color-mix(in srgb, var(--bub) 86%, var(--panelface));}
+  .bub.think .sp{color:var(--thought);}
+  .bub.wine{border-color:var(--wine);} .bub.wine .sp{color:var(--wine);}
+  .tail{position:absolute;bottom:-6px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--bubline);}
+  .tail.l{left:12px;} .tail.r{right:12px;}
+
+  .band{background:var(--band);color:var(--ink);font-size:10px;font-weight:700;text-align:center;
+    padding:6px 8px;white-space:pre-line;border-top:1px dashed var(--panel);}
+  .cta{background:var(--wine);color:#fff;font-size:9.5px;font-weight:700;text-align:center;padding:5px 6px;white-space:pre-line;line-height:1.4;}
+  .cardtext{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;
+    font-size:13px;font-weight:800;color:#fff;padding:16px;white-space:pre-line;line-height:1.4;
+    background:linear-gradient(180deg,#20232a55,#20232abb);}
+  .wm{position:absolute;right:5px;bottom:3px;font-size:8px;color:var(--sub);opacity:.7;z-index:5;}
+  .note{padding:8px 11px 11px;font-size:11px;color:var(--sub);line-height:1.45;border-top:1px solid var(--line);}
+  .note b{color:var(--ink);}
+
+  .titlebadge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;}
+  .titlebadge .kicker{font-size:8px;color:var(--sub);margin-bottom:6px;}
+  .titlebadge .big{font-size:20px;font-weight:900;line-height:1.12;color:var(--ink);}
+  .titlebadge .big .hl{color:var(--wine);}
+  footer{max-width:1280px;margin:30px auto 0;padding:16px 20px;color:var(--sub);font-size:12px;border-top:1px solid var(--line);}
+</style>
+
+<header class="top">
+  <h1>「오피스 와이프」(1) — 스토리보드 v2</h1>
+  <p class="subtitle">v7 기획안 기준 · 14장(표지+13) · 1080×1350(4:5) · 컷=물증 / 실루엣 캐릭터 / 정량 간결 규칙</p>
+  <p class="metaline">v1 대비 변경: 20→14장 압축, 매 컷 프레임·장소 전환(talking-heads 제거), 인물은 옷색이 아니라 <b>실루엣(헤어형태·명도)</b>으로 구분 — 아래 원 배지가 그 인물의 실루엣 색.<br>
+  뱃지 종류: <span class="tbadge evi" style="padding:1px 6px">물증</span> <span class="tbadge mirror" style="padding:1px 6px">거울반사</span> <span class="tbadge reveal" style="padding:1px 6px">역광리빌</span> <span class="tbadge low" style="padding:1px 6px">로우앵글</span> <span class="tbadge phys" style="padding:1px 6px">물리충격</span> <span class="tbadge ots" style="padding:1px 6px">OTS문틈</span> <span class="tbadge hand" style="padding:1px 6px">손클로즈업</span> <span class="tbadge card" style="padding:1px 6px">명대사카드</span></p>
+</header>
+
+<div class="charrow">
+  <div class="cchip"><span class="cdot suyeon">수</span><b>수연</b><span class="d">화자·순검정단발·랜야드</span></div>
+  <div class="cchip"><span class="cdot jihyeon">지</span><b>지현</b><span class="d">팀장·묶음머리+안경</span></div>
+  <div class="cchip"><span class="cdot minseo">아</span><b>아내</b><span class="d">긴웨이브·아이동반</span></div>
+  <div class="cchip"><span class="cdot minjae">민</span><b>민재</b><span class="d">투블럭·조끼</span></div>
+  <div class="cchip"><span class="cdot child">아이</span><b>아이(5)</b><span class="d">바가지머리</span></div>
+  <div class="cchip"><span class="cdot bujang">부</span><b>부장</b><span class="d">대머리·2편훅</span></div>
+</div>
+
+<div class="wrap"><div class="grid" id="grid"></div></div>
+
+<footer>워터마크 @might.be.your.story · 카운터 N/14 · 픽션 고지(표지·C14·캡션). 화려 컷(예산 3장)=C6·C8·C13, 나머지 담백. 콜백: C2↔C7(반지자국), C1↔C13(단톡방).</footer>
+
+<script>
+function bub(sp,side,text,think,wine,pos){
+  const cls=['bub']; if(think)cls.push('think'); if(wine)cls.push('wine');
+  const tail = side==='R' ? '<span class="tail r"></span>' : '<span class="tail l"></span>';
+  return `<div class="${cls.join(' ')}" style="${pos}"><span class="sp">${sp}</span>${text}${tail}</div>`;
+}
+function sil(cls,label,pos){return `<div class="silbadge ${cls}" style="${pos}">${label}</div>`;}
+
+const S = [
+ {cover:true,n:"0",cnt:"",
+  kicker:"@might.be.your.story · 어쩌면, 당신의 이야기",
+  big:['「오피스 와이프」','<span class="hl">(1)</span>'],
+  band:"모두가 팀장님을 욕하던 날,\n진짜 이야기는 따로 있었다",
+  motif:`<div class="backlit"></div>`,
+  sils:[sil('sb-suyeon','수','left:10%;top:40%'),sil('sb-minseo','아','left:70%;top:38%'),sil('sb-child','아이','left:82%;top:52%')],
+  note:"<b>표지.</b> 유리문 역광 아내+아이(리빌 전), 좌측 수연 관찰자. 순검정 단발로 즉시 식별."},
+
+ {ph:"세팅 · C1~C3"},
+ {n:"1",cnt:"1/14",tag:"evi",tagl:"물증·화면",budget:"plain",
+  narr:"소문을 제일 크게 옮긴 건, 나였다.",
+  motif:`<div class="phoneframe" style="margin-left:6%"><div class="phonescreen">
+    <div class="bubble-msg mine">나: 팀장이 막내 꼬셨대ㄷㄷ</div>
+    <div class="bubble-msg">완전 실화임?</div>
+    <div class="bubble-msg mine">내가 봤다니까</div>
+  </div></div>`,
+  sils:[sil('sb-suyeon','수','right:6%;bottom:8%')],
+  note:"<b>C1 물증컷.</b> 스마트폰 단톡방 화면 전체. 인물 얼굴 대신 UI로 시작 — C9·C13과 대칭/콜백."},
+
+ {n:"2",cnt:"2/14",tag:"evi",tagl:"물증·데스크",budget:"plain",
+  narr:"미혼이라던, 착한 후배의 자리.",
+  motif:`<div class="desk"></div><div class="objchip" style="left:16%;bottom:20%"></div><div class="objchip" style="left:34%;bottom:20%"></div>`,
+  sils:[sil('sb-minjae','민','left:50%;bottom:44%')],
+  bubs:[bub('민재','L',"저 아직 혼자가 편해요~",0,0,'left:8%;bottom:60%')],
+  note:"<b>C2 물증컷.</b> 컵라면·피규어뿐인 데스크(가족사진 0). <b>반지 자국 없는 왼손</b> 심기 → C7에서 회수."},
+
+ {n:"3",cnt:"3/14",tag:"ots",tagl:"OTS·문틈",budget:"plain",
+  narr:"소문은, 아주 사소한 데서 시작됐다.",
+  motif:`<div class="doorgap"></div>`,
+  sils:[sil('sb-jihyeon','지','left:58%;top:40%'),sil('sb-minjae','민','left:66%;top:44%')],
+  bubs:[bub('동료','L',"유부녀가 막내를 넘봐?\n애까지 있으면서.",0,0,'left:6%;top:12%')],
+  band:"팀장님은 끝까지 해명하지 않았다.",
+  note:"<b>C3 OTS.</b> 문틈 너머 지현·민재. <b>지현 왼손 반지</b>로 유부녀 못박기. 클리프행어."},
+
+ {ph:"접근·리빌 · C4~C8"},
+ {n:"4",cnt:"4/14",tag:"evi",tagl:"물증·명부",budget:"plain",
+  narr:"미혼이라던 사람에게, 가족이 찾아왔다.",
+  motif:`<div class="desk" style="bottom:30%;height:34%"></div>`,
+  sils:[],
+  note:"<b>C4 물증컷.</b> 방문자 명부 클로즈업 — '방문: 강민재 / 관계: 가족' + 아이 낙서. 대사 없이 물증만. 클리프행어."},
+
+ {n:"5",cnt:"5/14",tag:"mirror",tagl:"거울반사",budget:"plain",
+  narr:"",
+  motif:`<div class="mirrorframe"></div>`,
+  sils:[sil('sb-minjae','민','left:44%;top:34%')],
+  bubs:[bub('수연(속)','L',"나를 말리고 싶어 하는\n얼굴이었다.",0,1,'left:6%;bottom:8%')],
+  note:"<b>C5 거울.</b> 엘베 거울 속 민재, 식은땀+넥타이+층수등. 얼굴 대신 반사로 심리 표현."},
+
+ {n:"6",cnt:"6/14",tag:"reveal",tagl:"역광리빌",budget:"rich",
+  narr:"로비에는, 아무도 예상 못 한 사람이\n서 있었다.",
+  motif:`<div class="backlit"></div>`,
+  sils:[sil('sb-minseo','아','left:66%;top:38%'),sil('sb-child','아이','left:80%;top:54%')],
+  bubs:[bub('아내','R',"저, 강민재 씨\n아내예요.",0,0,'left:44%;top:14%')],
+  note:"<b>★화려 ⓐ C6.</b> 역광 실루엣→리빌. 아이가 든 가족사진 액자. 표지 대사 회수. 첫 충격."},
+
+ {n:"7",cnt:"7/14",tag:"low",tagl:"로우앵글·콜백",budget:"plain",
+  narr:"",
+  motif:`<div class="lowangle"></div>`,
+  sils:[sil('sb-child','아이','left:34%;bottom:6%'),sil('sb-minjae','민','left:46%;bottom:20%')],
+  bubs:[bub('아이','L',"아빠!!",0,0,'left:6%;bottom:34%'),bub('민재','R',"…네가 왜 여기…",0,0,'right:6%;top:14%')],
+  note:"<b>C7 로우앵글+콜백.</b> 아이가 다리 붙잡음. <b>왼손 반지 자국(하얗게)</b> — C2 회수, 거짓말 증명."},
+
+ {n:"8",cnt:"8/14",tag:"phys",tagl:"물리적 충격",budget:"rich",
+  narr:"",
+  motif:`<div class="liquid"></div>`,
+  sils:[sil('sb-jihyeon','지','left:44%;top:30%')],
+  bubs:[bub('수연(속)','L',"팀장님은 저 여자가 아니라\n'민재 씨'를 아는 얼굴이었다.",0,1,'left:6%;bottom:8%')],
+  note:"<b>★화려 ⓑ C8.</b> 지현 하얗게 질림 + 종이컵 커피가 기울어 떨어지는 순간. 충격을 사물로 표현."},
+
+ {ph:"진실 물증 · C9~C11"},
+ {n:"9",cnt:"9/14",tag:"evi",tagl:"물증·카톡(대칭)",budget:"plain",
+  narr:"",
+  motif:`<div class="phoneframe" style="margin-left:20%"><div class="phonescreen">
+    <div class="bubble-msg">나 이혼했어.</div>
+    <div class="bubble-msg">이제 같이 있어도 돼.</div>
+  </div></div>`,
+  sils:[],
+  bubs:[bub('지현','L',"…이혼했다고,\n분명히 이렇게 보냈어요.",0,0,'left:6%;bottom:8%')],
+  note:"<b>C9 물증(C1과 대칭 포맷).</b> 민재의 거짓말 카톡. 같은 '화면 UI'로 소문(C1)↔진실(C9) 대칭."},
+
+ {n:"10",cnt:"10/14",tag:"hand",tagl:"손 클로즈업",budget:"plain",
+  narr:"두 사람의 말이 하나로 맞춰지고 있었다.",
+  motif:`<div class="phoneframe" style="width:34%;margin-right:14%"><div class="phonescreen" style="font-size:7px">가족 셀카 📷<br>지난 주말</div></div>
+         <div class="phoneframe" style="width:34%;margin-left:14%"><div class="phonescreen" style="font-size:7px">카톡 대화<br>같은 날짜</div></div>`,
+  sils:[],
+  bubs:[bub('아내','R',"저흰 지난 주말에도\n같이 있었는데요.",0,0,'left:20%;bottom:8%')],
+  note:"<b>C10 두 폰 대조.</b> 날짜가 겹치는 물증 두 개를 나란히 — 시간표 충돌을 그림으로."},
+
+ {n:"11",cnt:"11/14",tag:"evi",tagl:"물증·사원증(민재배제)",budget:"plain",
+  narr:"",
+  motif:`<div class="idcard"></div>`,
+  sils:[sil('sb-jihyeon','지','left:26%;top:30%'),sil('sb-minseo','아','left:64%;top:30%'),sil('sb-child','아이','left:76%;top:50%')],
+  bubs:[bub('아내','R',"그럼 우리 둘 다\n속은 거네요.",0,0,'left:52%;bottom:8%'),bub('지현','L',"…저도,\n몰랐어요.",0,0,'left:6%;bottom:8%')],
+  note:"<b>C11 상징 오브젝트+민재 배제.</b> 바닥에 떨어진 사원증, 민재는 프레임 밖. 여론 역전의 시각적 시작."},
+
+ {ph:"여파 · C12~C14 (늘리지 않음)"},
+ {n:"12",cnt:"12/14",tag:"card",tagl:"명대사 카드",budget:"plain",
+  narr:"",
+  card:"가해자인 줄 알았던 사람이\n사실은, 가장 크게 속은 사람이었다",
+  note:"<b>C12 명대사 카드.</b> 인물 없음, 대형 타이포. 저장·공유 유발. 1편 1장만."},
+
+ {n:"13",cnt:"13/14",tag:"mirror",tagl:"거울+콜백",budget:"rich",
+  narr:"",
+  motif:`<div class="toilet"></div><div class="phoneframe" style="width:22%;margin-left:auto;margin-right:10%;transform:scale(.8)"><div class="phonescreen" style="font-size:6px">단톡방<br>(다시 켬)</div></div>`,
+  sils:[sil('sb-suyeon','수','left:38%;top:34%')],
+  bubs:[bub('수연(속)','L',"제일 앞장서 욕한 내가,\n제일 부끄러웠다.",0,1,'left:6%;bottom:8%')],
+  note:"<b>★화려 ⓒ C13.</b> 화장실 거울 속 수연 + C1 단톡방 재등장(콜백). 화자 죄책감 정점."},
+
+ {n:"14",cnt:"14/14",tag:"evi",tagl:"물증·앱+CTA",budget:"plain",
+  narr:"",
+  motif:`<div class="corridor"></div><div class="phoneframe" style="width:34%;margin-left:auto;margin-right:8%;transform:scale(.85)"><div class="phonescreen" style="font-size:7px">법인카드 명세<br><span style="color:#c0392b;font-weight:800">-2,480,000원</span></div></div>`,
+  sils:[sil('sb-bujang','부','right:14%;top:36%')],
+  bubs:[bub('부장','R',"민재 걔 법인카드…\n지금 확인해 봐.",0,0,'left:6%;top:12%')],
+  band:"그리고 이 일은, 여기서 끝이 아니었다.",
+  cta:"🔖 2편 놓치지 않으려면 팔로우 — 매주 화·금 밤 9시\n「오피스 와이프」(2)에서 계속됩니다",
+  note:"<b>C14 엔딩+2편훅.</b> 새 장소(복도)+법인카드 앱 물증. 1편 완결, 다음 편 예열."}
+];
+
+const grid=document.getElementById('grid');
+S.forEach(s=>{
+  if(s.ph){const d=document.createElement('div');d.className='phase';d.textContent=s.ph;grid.appendChild(d);return;}
+  const card=document.createElement('div');card.className='card';
+  let boardCls='board'+(s.budget==='rich'?' rich':'');
+  let inner='';
+  if(s.cover){
+    inner=`<div class="titlebadge"><div class="kicker">${s.kicker}</div><div class="big">${s.big.join(' ')}</div></div>
+      <div class="motif">${s.motif||''}</div>
+      ${(s.sils||[]).join('')}
+      ${s.band?`<div class="band" style="position:absolute;left:0;right:0;bottom:0">${s.band}</div>`:''}`;
+  } else if(s.card){
+    inner=`<div class="stage" style="margin:0;border:none"><div class="cardtext">${s.card}</div></div>`;
+  } else {
+    inner+= s.narr? `<div class="narr">${s.narr}</div>` : `<div class="narr" style="min-height:10px;padding:3px"></div>`;
+    inner+=`<div class="stage">${s.motif||''}${(s.sils||[]).join('')}${(s.bubs||[]).join('')}</div>`;
+    if(s.band)inner+=`<div class="band">${s.band}</div>`;
+    if(s.cta)inner+=`<div class="cta">${s.cta}</div>`;
+  }
+  inner+=`<div class="wm">@might.be.your.story</div>`;
+  const budgetChip = s.budget ? `<span class="budget ${s.budget}">${s.budget==='rich'?'화려':'담백'}</span>` : '';
+  card.innerHTML=`<div class="cap"><span class="num">${s.n}</span>${s.tag?`<span class="tbadge ${s.tag}">${s.tagl}</span>`:''}<span class="capname"></span>${budgetChip}<span class="cnt">${s.cnt||''}</span></div>
+    <div class="${boardCls}">${inner}</div>
+    ${s.note?`<div class="note">${s.note}</div>`:''}`;
+  grid.appendChild(card);
+});
+</script>
